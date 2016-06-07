@@ -1,13 +1,15 @@
 {
   "name": "waterline-pouchdb",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "pouchdb adapter for Sails / Waterline",
   "main": "lib/adapter.js",
   "scripts": {
     "test": "node test/integration/runner -R spec -b"
   },
   "repository": "millette/waterline-pouchdb.git",
-  "engines": { "node": ">=4" },
+  "engines": {
+    "node": ">=4"
+  },
   "keywords": [
     "pouchdb",
     "adapter",
