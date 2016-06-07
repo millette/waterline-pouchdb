@@ -2,7 +2,7 @@
   "name": "waterline-pouchdb",
   "version": "0.0.0",
   "description": "pouchdb adapter for Sails / Waterline",
-  "main": "adapter.js",
+  "main": "lib/adapter.js",
   "scripts": {
     "test": "node test/integration/runner -R spec -b"
   },
