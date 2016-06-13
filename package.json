@@ -26,9 +26,15 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
+    "bedwetter": "github:edwinallenz/bedwetter",
+    "dogwater": "^1.1.0",
+    "glue": "^3.3.0",
+    "hapi": "^13.4.1",
     "pouchdb-adapter-memory": "^5.4.0",
     "pouchdb-core": "^5.4.0",
-    "pouchdb-find": "^0.10.0"
+    "pouchdb-find": "^0.10.0",
+    "sails-disk": "^0.10.10",
+    "sails-memory": "^0.10.7"
   },
   "devDependencies": {
     "waterline-adapter-tests": "~0.10.0",
