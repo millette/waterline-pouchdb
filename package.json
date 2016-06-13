@@ -2,16 +2,17 @@
   "name": "waterline-pouchdb",
   "version": "0.0.1",
   "description": "pouchdb adapter for Sails / Waterline",
-  "main": "lib/adapter.js",
-  "scripts": {
-    "test": "node test/integration/runner -R spec -b"
-  },
+  "main": "index.js",
   "repository": "millette/waterline-pouchdb.git",
   "engines": {
     "node": ">=4"
   },
+  "scripts": {
+    "lint": "standard"
+  },
   "keywords": [
     "pouchdb",
+    "couchdb",
     "adapter",
     "sails",
     "waterline",
@@ -26,20 +27,12 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "bedwetter": "github:edwinallenz/bedwetter",
-    "dogwater": "^1.1.0",
-    "glue": "^3.3.0",
-    "hapi": "^13.4.1",
-    "pouchdb-adapter-memory": "^5.4.0",
-    "pouchdb-core": "^5.4.0",
+    "debug": "^2.2.0",
+    "pouchdb-adapter-http": "^5.4.2",
+    "pouchdb-adapter-memory": "^5.4.2",
+    "pouchdb-core": "^5.4.2",
     "pouchdb-find": "^0.10.0",
-    "sails-disk": "^0.10.10",
-    "sails-memory": "^0.10.7"
-  },
-  "devDependencies": {
-    "waterline-adapter-tests": "~0.10.0",
-    "mocha": "*",
-    "captains-log": "~0.11.0"
+    "pouchdb-replication": "^5.4.2"
   },
   "waterlineAdapter": {
     "type": "pouchdb",
@@ -47,5 +40,8 @@
       "semantic"
     ],
     "waterlineVersion": "~0.10.0"
+  },
+  "devDependencies": {
+    "standard": "^7.1.2"
   }
 }
