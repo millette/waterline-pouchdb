@@ -91,16 +91,6 @@ module.exports = (function () {
       if (!connection.identity) return cb(new Error('Connection is missing an identity.'))
       if (connections[connection.identity]) return cb(new Error('Connection is already registered.'))
 
-      // console.log('CONNECTION111:', connection, connection.identity)
-
-      /*
-      const db = new PouchDB(connection.identity)
-      db.sync('http://localhost:5984/hap', {
-        live: true,
-        retry: true
-      })
-      connections[connection.identity] = db
-      */
       connections[connection.identity] = new PouchDB(connection.identity)
       cb()
     },
@@ -115,19 +105,14 @@ module.exports = (function () {
      */
     // Teardown a Connection
     teardown: function (conn, cb) {
-      // console.log('CONNECTION666-conn-A:', conn)
-      // console.log('CONNECTION666-cb:', cb)
-
       if (typeof conn === 'function') {
         cb = conn
         conn = null
       }
-      // console.log('CONNECTION666-conn-B:', conn)
       if (!conn) {
         connections = {}
         return cb()
       }
-      // console.log('CONNECTION666-conn-C:', conn)
       if (!connections[conn.identity]) return cb()
       const db = connections[conn]
       db.destroy()
@@ -140,127 +125,38 @@ module.exports = (function () {
           cb()
         })
     },
-
-    /*
-    // Return attributes
-    describe: function (connection, collection, cb) {
-      // Add in logic here to describe a collection (e.g. DESCRIBE TABLE logic)
-      return cb()
-    },
-    */
-
-    /**
-     *
-     * REQUIRED method if integrating with a schemaful
-     * (SQL-ish) database.
-     *
-     */
-    /*
-    define: function (connection, collection, definition, cb) {
-      // Add in logic here to create a collection (e.g. CREATE TABLE logic)
-      return cb()
-    },
-    */
-
-    /**
-     *
-     * REQUIRED method if integrating with a schemaful
-     * (SQL-ish) database.
-     *
-     */
-    /*
-    drop: function (connection, collection, relations, cb) {
-      // Add in logic here to delete a collection (e.g. DROP TABLE logic)
-      return cb()
-    },
-    */
-
-    /**
-     *
-     * REQUIRED method if users expect to call Model.find(), Model.findOne(),
-     * or related.
-     *
-     * You should implement this method to respond with an array of instances.
-     * Waterline core will take care of supporting all the other different
-     * find methods/usages.
-     *
-     */
     find: function (connection, collection, options, cb) {
       debug('FINDING', options)
-      // console.log('CONNECTION222:', connection, options)
-      // return connections[connection].get(options.where.id)
-      const q = {
-        selector: options.where
-      }
-
-      /*
-      if (q.selector.id) {
-        q.selector._id = q.selector.id
-        delete q.selector.id
-      }
-      */
-
-      // q.selector[options.where]
-      /* {
-        selector: {
-          _id: options.where.id
-        }
-      } */
-      return connections[connection].find(q)
+      return connections[connection].find({ selector: options.where })
         .then((x) => x.docs)
         .then((x) => {
           debug('FOUND:', x)
           cb(null, x)
-          /*
-          if (x.length) {
-            if (x.length === 1) {
-              cb(null, x[0])
-            } else {
-              cb(null, x)
-            }
-          } else {
-            cb(true)
-          }
-          */
         })
         .catch((err) => {
           console.log('ERROR', err)
           cb(err)
         })
     },
-
     create: function (connection, collection, values, cb) {
-      // console.log('CONNECTION333-cb:', cb)
-      // console.log('CONNECTION333-conn:', connection)
-      // console.log('CONNECTION333-coll:', collection)
-
-      // console.log('CONNECTION333-values:', values)
-      // console.log('CONNECTION333-values-keys:', Object.keys(values))
-      // console.log('CONNECTION333-values-len:', values.length)
-      // values.forEach((v) => {
-        // console.log('CONNECTION333-value:', v)
-      // })
       debug('CREATING')
       return connections[connection].post(values)
         .then((x) => {
-          // console.log('MADE', x)
           values._id = x.id
           values._rev = x.rev
           cb(null, values)
         })
         .catch((err) => {
-          // console.log('ERROR', err)
+          console.log('ERROR', err)
           cb(err)
         })
     },
-
     update: function (connection, collection, options, values, cb) {
       debug('UPDATING')
       return connections[connection].put(values)
         .then((x) => cb(null, x))
         .catch((err) => cb(err))
     },
-
     destroy: function (connection, collection, options, cb) {
       debug('DESTROYING')
       return connections[connection].remove(options.id, options._rev)
