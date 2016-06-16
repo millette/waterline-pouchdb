@@ -164,7 +164,7 @@ module.exports = (function () {
         .catch((err) => cb(err))
     },
     syncSetup: function (connection, collection, options, cb) {
-      connections[connection].sync(options)
+      connections[connection].sync(options, { live: true, retry: true })
       return cb(null, 'now syncing')
     }
   }
