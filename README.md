@@ -67,57 +67,9 @@ It's usually pretty easy to add your own adapters for integrating with proprieta
 3. Build your adapter.
 
 
-
-
-### Running the tests
-
-Configure the interfaces you plan to support (and targeted version of Sails/Waterline) in the adapter's `package.json` file:
-
-```javascript
-{
-  //...
-  "sails": {
-        "adapter": {
-            "sailsVersion": "~0.10.0",
-            "implements": [
-              "semantic",
-              "queryable"
-            ]
-          }
-  }
-}
-```
-
-In your adapter's directory, run:
-
-```sh
-$ npm test
-```
-
-
-## Publish your adapter
-
-> You're welcome to write proprietary adapters and use them any way you wish--
-> these instructions are for releasing an open-source adapter.
-
-1. Create a [new public repo](https://github.com/new) and add it as a remote (`git remote add origin git@github.com:yourusername/sails-youradaptername.git)
-2. Make sure you attribute yourself as the author and set the license in the package.json to "MIT".
-3. Run the tests one last time.
-4. Do a [pull request to sails-docs](https://github.com/balderdashy/sails-docs/compare/) adding your repo to `data/adapters.js`.  Please let us know about any special instructions for usage/testing.
-5. We'll update the documentation with information about your new adapter
-6. Then everyone will adore you with lavish praises.  Mike might even send you jelly beans.
-
-7. Run `npm version patch`
-8. Run `git push && git push --tags`
-9. Run `npm publish`
-
-
-
-
 ### Questions?
 
 See [`FAQ.md`](./FAQ.md).
-
 
 
 ### More Resources
@@ -133,12 +85,8 @@ See [`FAQ.md`](./FAQ.md).
 ### License
 
 **[MIT](./LICENSE)**
-&copy; 2014 [balderdashy](http://github.com/balderdashy) & [contributors]
-[Mike McNeil](http://michaelmcneil.com), [Balderdash](http://balderdash.co) & contributors
+Copyright 2016 [balderdashy](http://github.com/balderdashy) & [contributors]
+[Mike McNeil](http://michaelmcneil.com), [Balderdash](http://balderdash.co),
+[Robin Millette](http://robin.millette.info/) & contributors
 
 [Sails](http://sailsjs.org) is free and open-source under the [MIT License](http://sails.mit-license.org/).
-
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/8acf2fc2ca0aca8a3018e355ad776ed7 "githalytics.com")](http://githalytics.com/balderdashy/waterline-pouchdb/README.md)
-
-
