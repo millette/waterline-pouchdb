@@ -28,11 +28,11 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "debug": "^2.2.0",
-    "pouchdb-adapter-http": "^5.4.2",
-    "pouchdb-adapter-memory": "^5.4.2",
-    "pouchdb-core": "^5.4.2",
-    "pouchdb-find": "^0.10.0",
-    "pouchdb-replication": "^5.4.2"
+    "pouchdb-adapter-http": "^5.4.4",
+    "pouchdb-adapter-memory": "^5.4.4",
+    "pouchdb-core": "^5.4.4",
+    "pouchdb-find": "^0.10.2",
+    "pouchdb-replication": "^5.4.4"
   },
   "waterlineAdapter": {
     "type": "pouchdb",

@@ -1,6 +1,7 @@
 ![image_squidhome@2x.png](http://i.imgur.com/RIvu9.png)
 
 # waterline-pouchdb
+[![Dependency Status](https://gemnasium.com/badges/github.com/millette/waterline-pouchdb.svg)](https://gemnasium.com/github.com/millette/waterline-pouchdb)
 
 Provides easy access to `pouchdb` from Sails.js & Waterline.
 
@@ -76,13 +77,13 @@ Configure the interfaces you plan to support (and targeted version of Sails/Wate
 {
   //...
   "sails": {
-  	"adapter": {
-	    "sailsVersion": "~0.10.0",
-	    "implements": [
-	      "semantic",
-	      "queryable"
-	    ]
-	  }
+        "adapter": {
+            "sailsVersion": "~0.10.0",
+            "implements": [
+              "semantic",
+              "queryable"
+            ]
+          }
   }
 }
 ```
