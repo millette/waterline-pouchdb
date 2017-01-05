@@ -2,13 +2,24 @@
  * Module Dependencies
  */
 
-const PouchDB = require('pouchdb-core')
-  .plugin(require('pouchdb-adapter-memory'))
-  .plugin(require('pouchdb-adapter-http'))
-  .plugin(require('pouchdb-replication'))
-  .plugin(require('pouchdb-find'))
+const PouchDB = require('pouchdb')
+.plugin(require('pouchdb-adapter-memory'))
+.plugin(require('pouchdb-adapter-http'))
+.plugin(require('pouchdb-replication'))
+.plugin(require('pouchdb-find'))
 
-const debug = require('debug')('waterline-pouchdb')
+const debug = require('debug')('waterline-pouchdb'),
+      path = require('path'),
+      fs = require('fs'),
+      dbPath =  path.join(path.resolve('.'), 'tmp/' ),
+      _localPouch = PouchDB.defaults({
+        prefix: dbPath
+      });
+
+if (!fs.existsSync(dbPath)) {
+  fs.mkdirSync(dbPath);
+  debug("create :"+ dbPath);
+}
 
 /**
  * waterline-pouchdb
@@ -87,11 +98,13 @@ module.exports = (function () {
      * @param  {Function} cb         [description]
      * @return {[type]}              [description]
      */
+
     registerConnection: function (connection, collections, cb) {
+
       if (!connection.identity) return cb(new Error('Connection is missing an identity.'))
       if (connections[connection.identity]) return cb(new Error('Connection is already registered.'))
 
-      connections[connection.identity] = new PouchDB(connection.identity)
+      connections[connection.identity] = new _localPouch(connection.identity)
       cb()
     },
 
@@ -117,54 +130,71 @@ module.exports = (function () {
       const db = connections[conn]
       db.destroy()
         .then(() => {
-          delete connections[conn]
-          cb()
-        })
+        delete connections[conn]
+        cb()
+      })
         .catch((err) => {
-          console.error('EEERRRRROOORRR:', err)
-          cb()
-        })
+        console.error('EEERRRRROOORRR:', err)
+        cb()
+      })
     },
     find: function (connection, collection, options, cb) {
-      debug('FINDING', options)
-      return connections[connection].find({ selector: options.where })
-        .then((x) => x.docs)
-        .then((x) => {
-          debug('FOUND:', x)
+      debug('FINDING')
+      if(!options.where){
+        return Promise.resolve(connections[collection].allDocs({include_docs: true})
+                               .then((x) => {
+          debug('FOUND')
+          var docs = x.rows.reduce(function(accum, result){
+            result.doc.id = result.id;
+            accum.push(result.doc);
+            return accum;
+          }, []);
+          cb(null, docs)
+        })
+                               .catch((err) => {
+          console.log('ERROR', err)
+          cb(err)
+        }));
+      } else{
+        return connections[collection].find({ selector: options.where , fields: options.select })
+          .then((x) => x.docs)
+          .then((x) => {
+          debug('FOUND')
           cb(null, x)
         })
-        .catch((err) => {
+          .catch((err) => {
           console.log('ERROR', err)
           cb(err)
         })
+      }
     },
     create: function (connection, collection, values, cb) {
       debug('CREATING')
-      return connections[connection].post(values)
+      return connections[collection].post(values)
         .then((x) => {
-          values._id = x.id
-          values._rev = x.rev
-          cb(null, values)
-        })
+        values._id = x.id
+        values._rev = x.rev
+        cb(null, values)
+      })
         .catch((err) => {
-          console.log('ERROR', err)
-          cb(err)
-        })
+        console.log('ERROR', err)
+        cb(err)
+      })
     },
     update: function (connection, collection, options, values, cb) {
       debug('UPDATING')
-      return connections[connection].put(values)
+      return connections[collection].put(values)
         .then((x) => cb(null, x))
         .catch((err) => cb(err))
     },
     destroy: function (connection, collection, options, cb) {
       debug('DESTROYING')
-      return connections[connection].remove(options.id, options._rev)
+      return connections[collection].remove(options.id, options._rev)
         .then((x) => cb(null, x))
         .catch((err) => cb(err))
     },
     syncSetup: function (connection, collection, options, cb) {
-      connections[connection].sync(options, { live: true, retry: true })
+      connections[collection].sync(options, { live: true, retry: true })
       return cb(null, 'now syncing')
     }
   }
