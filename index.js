@@ -3,10 +3,6 @@
  */
 
 const PouchDB = require('pouchdb')
-.plugin(require('pouchdb-adapter-memory'))
-.plugin(require('pouchdb-adapter-http'))
-.plugin(require('pouchdb-replication'))
-.plugin(require('pouchdb-find'))
 
 const debug = require('debug')('waterline-pouchdb'),
       path = require('path'),
@@ -18,7 +14,7 @@ const debug = require('debug')('waterline-pouchdb'),
 
 if (!fs.existsSync(dbPath)) {
   fs.mkdirSync(dbPath);
-  debug("create :"+ dbPath);
+  debug("create path:"+ dbPath);
 }
 
 /**
@@ -76,6 +72,7 @@ module.exports = (function () {
     // safe   => Don't change anything (good for production DBs)
     //
     syncable: false,
+    reservedAttributes : ['id', 'rev'],
     pkFormat: 'string',
 
     // Default configuration for connections
@@ -103,8 +100,12 @@ module.exports = (function () {
 
       if (!connection.identity) return cb(new Error('Connection is missing an identity.'))
       if (connections[connection.identity]) return cb(new Error('Connection is already registered.'))
-
+      
       connections[connection.identity] = new _localPouch(connection.identity)
+      
+      if(connection.sync)
+        _registerSync(connection.sync, connection.identity, connections[connection.identity]);
+      
       cb()
     },
 
@@ -167,10 +168,14 @@ module.exports = (function () {
           cb(err)
         })
       }
+
     },
     create: function (connection, collection, values, cb) {
       debug('CREATING')
-      return connections[collection].post(values)
+      if(!values._id && values.id){
+        values._id = values.id;
+      }
+      return connections[collection].put(values)
         .then((x) => {
         values._id = x.id
         values._rev = x.rev
@@ -192,13 +197,29 @@ module.exports = (function () {
       return connections[collection].remove(options.id, options._rev)
         .then((x) => cb(null, x))
         .catch((err) => cb(err))
-    },
-    syncSetup: function (connection, collection, options, cb) {
-      connections[collection].sync(options, { live: true, retry: true })
-      return cb(null, 'now syncing')
     }
   }
 
   // Expose adapter definition
   return adapter
 })()
+
+
+var _registerSync = function (remoteCouch, collectionName, localDB){
+  var  _remoteCollection = remoteCouch.url + '/' + collectionName;
+  debug(_remoteCollection)
+  localDB.sync(_remoteCollection, {
+    live: true,
+    retry: true,
+    withCredentials: true
+}).on('change', function (change) {
+    debug(['sync-change-' + collectionName, change]);
+}).on('paused', function (info) {
+   debug(['sync-paused-' + collectionName, info]);
+}).on('active', function (info) {
+   debug(['sync-active-' + collectionName, info]);
+}).on('error', function (err) {
+   debug(['sync-error-' + collectionName, err]);
+});
+      
+};
