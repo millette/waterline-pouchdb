@@ -2,20 +2,13 @@
  * Module Dependencies
  */
 
-const PouchDB = require('pouchdb')
-
-const debug = require('debug')('waterline-pouchdb'),
+const PouchDB = require('pouchdb'),
+      debug = require('debug')('waterline-pouchdb'),
       path = require('path'),
-      fs = require('fs'),
-      dbPath =  path.join(path.resolve('.'), 'tmp/' ),
-      _localPouch = PouchDB.defaults({
-        prefix: dbPath
-      });
+      fs = require('fs');
 
-if (!fs.existsSync(dbPath)) {
-  fs.mkdirSync(dbPath);
-  debug("create path:"+ dbPath);
-}
+var dbPath,
+    _localPouch;
 
 /**
  * waterline-pouchdb
@@ -100,11 +93,11 @@ module.exports = (function () {
 
       if (!connection.identity) return cb(new Error('Connection is missing an identity.'))
       if (connections[connection.identity]) return cb(new Error('Connection is already registered.'))
+      if (!_localPouch) _configPouchDB(connection.path);
 
       connections[connection.identity] = new _localPouch(connection.identity)
 
-      if(connection.sync)
-        _registerSync(connection.sync, connection.identity, connections[connection.identity]);
+      if(connection.sync) _registerSync(connection.sync, connection.identity, connections[connection.identity]);
 
       cb()
     },
@@ -195,7 +188,6 @@ module.exports = (function () {
           console.log('ERROR', err)
           cb(err)
         })
-      }
     },
     update: function (connection, collection, options, values, cb) {
       debug('UPDATING')
@@ -216,8 +208,9 @@ module.exports = (function () {
 })()
 
 var _registerSync = function (remoteCouch, collectionName, localDB){
-  var  _remoteCollection = _generateUrl(remoteCouch)+ collectionName;
-  debug(_remoteCollection)
+  var  _remoteCollection = _generateUrl(remoteCouch) + collectionName;
+  
+  debug("remote url :", _remoteCollection)
   localDB.sync(_remoteCollection, {
     live: true,
     retry: true,
@@ -233,9 +226,27 @@ var _registerSync = function (remoteCouch, collectionName, localDB){
   });
 };
 
-var _generateUrl = function (remoteCouch ){
+var _generateUrl = function (remoteCouch) {
   var auth = remoteCouch.username && remoteCouch.password? remoteCouch.username+':'+remoteCouch.password+'@' : '';
   return remoteCouch.protocol+'://'+auth+remoteCouch.host+':'+remoteCouch.port+'/';
 };
 
+var _configPouchDB = function (_path){
+  _definePath(_path);
+  debug("db location: "+dbPath);
+  
+  _localPouch = PouchDB.defaults({
+    prefix: dbPath
+  });
+
+  if (!fs.existsSync(dbPath)) {
+    fs.mkdirSync(dbPath);
+    debug("db location not exist, but was create");
+  }
 };
+
+var _definePath = function(_path) {
+  _path =  _path ? _path : '/tmp/pouchDB';
+  _path = path.join(path.resolve(_path),'/');
+  dbPath = _path;
+}

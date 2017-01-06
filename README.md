@@ -23,10 +23,13 @@ Config the entry in `config/connections.js`:
 ```javascript
 //...
   pouch: {                                                                       
-    adapter: 'waterline-pouchdb',                      
+    adapter: 'waterline-pouchdb',  
+    path: './tmp', //optional
   }
 //...
 ```
+
+By default, the database location is `/tmp/pouchDB`. If you need to change the location add the field `path`.
 
 ### Usage
 
@@ -61,13 +64,14 @@ If you need to sync with a couchDB (for example, in http://localhost:5984/ with 
 //...
   pouch: {                                                                       
     adapter: 'waterline-pouchdb',
-      sync:{
-          protocol: 'http',
-          host: 'localhost',
-          port: '5984',
-          user: '_user',
-          password: '_password',
-      },                        
+    path: './tmp', //optional
+    sync:{
+      protocol: 'http',
+      host: 'localhost',
+      port: '5984',
+      user: '_user',
+      password: '_password',
+    },                        
   }
 //...
 ```
