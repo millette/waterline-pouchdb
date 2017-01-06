@@ -172,19 +172,30 @@ module.exports = (function () {
     },
     create: function (connection, collection, values, cb) {
       debug('CREATING')
-      if(!values._id && values.id){
-        values._id = values.id;
+      if(values._id || values.id){
+        values._id = values._id ? values._id : values.id;
+        return connections[collection].put(values)
+          .then((x) => {
+          values._rev = x.rev
+          cb(null, values)
+        })
+          .catch((err) => {
+          console.log('ERROR', err)
+          cb(err)
+        })
       }
-      return connections[collection].put(values)
-        .then((x) => {
-        values._id = x.id
-        values._rev = x.rev
-        cb(null, values)
-      })
-        .catch((err) => {
-        console.log('ERROR', err)
-        cb(err)
-      })
+      else{
+        return connections[connection].post(values)
+          .then((x) => {
+          values._id = x.id
+          values._rev = x.rev
+          cb(null, values)
+        })
+          .catch((err) => {
+          console.log('ERROR', err)
+          cb(err)
+        })
+      }
     },
     update: function (connection, collection, options, values, cb) {
       debug('UPDATING')
