@@ -20,7 +20,7 @@ $ npm install waterline-pouchdb
 
 Config the entry in `config/connections.js`:
 
-```json
+```javascript
 //...
   pouch: {                                                                       
     adapter: 'waterline-pouchdb',                      
@@ -57,7 +57,7 @@ module.exports.models = {
 
 If you need to sync with a couchDB (for example, in http://localhost:5984/ with a specific user `_user` and password `_password`) add in config/connections.js the **sync** field:
 
-```json
+```javascript
 //...
   pouch: {                                                                       
     adapter: 'waterline-pouchdb',
