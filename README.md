@@ -18,10 +18,60 @@ To install this adapter, run:
 $ npm install waterline-pouchdb
 ```
 
+Config the entry in `config/connections.js`:
 
-
+```json
+//...
+  pouch: {                                                                       
+    adapter: 'waterline-pouchdb',                      
+  }
+//...
+```
 
 ### Usage
+
+Use in a model `models/ExampleModel.js` specifying the adapter defined above:
+
+```javascript
+module.exports = {
+  adapter: 'pouch',
+  //...
+  id: {
+    primaryKey: true,
+    type: 'string'
+  },
+  attributes: {
+    name: 'string',
+    //...
+  }
+}
+```
+
+Or set "pouch" as the default adapter for all models, in `config/models.js`:
+
+```javascript
+module.exports.models = {
+  connection: 'pouch'
+};
+```
+
+If you need to sync with a couchDB (for example, in http://localhost:5984/ with a specific user `_user` and password `_password`) add in config/connections.js the **sync** field:
+
+```json
+//...
+  pouch: {                                                                       
+    adapter: 'waterline-pouchdb',
+      sync:{
+          protocol: 'http',
+          host: 'localhost',
+          port: '5984',
+          user: '_user',
+          password: '_password',
+      },                        
+  }
+//...
+```
+
 
 This adapter exposes the following methods:
 
