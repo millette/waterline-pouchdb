@@ -141,6 +141,7 @@ See [`FAQ.md`](./FAQ.md).
 **[MIT](./LICENSE)**
 Copyright 2016 [balderdashy](http://github.com/balderdashy) & [contributors]
 [Mike McNeil](http://michaelmcneil.com), [Balderdash](http://balderdash.co),
-[Robin Millette](http://robin.millette.info/) & contributors
+[Robin Millette](http://robin.millette.info/), 
+[Juan José Ramírez Glz](https://github.com/jaun-rg) & contributors
 
 [Sails](http://sailsjs.org) is free and open-source under the [MIT License](http://sails.mit-license.org/).
