@@ -9,6 +9,10 @@ This module is a Waterline/Sails adapter, an early implementation of a rapidly-d
 
 Strict adherence to an adapter specification enables the (re)use of built-in generic test suites, standardized documentation, reasonable expectations around the API for your users, and overall, a more pleasant development experience for everyone.
 
+## Deprecation notice
+This repo is deprecated in favor of <https://github.com/jaun-rg/waterline-pouchdb>.
+Thank you [Juan José R. G.](https://github.com/jaun-rg) for picking up the ball.
+He will also be maintaining the [npm package](https://www.npmjs.com/package/waterline-pouchdb).
 
 ### Installation
 
