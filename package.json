@@ -1,9 +1,9 @@
 {
   "name": "waterline-pouchdb",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "pouchdb adapter for Sails / Waterline",
   "main": "index.js",
-  "repository": "millette/waterline-pouchdb.git",
+  "repository": "jaun-rg/waterline-pouchdb.git",
   "engines": {
     "node": ">=4"
   },
@@ -24,6 +24,11 @@
     "email": "robin@millette.info",
     "url": "http://robin.millette.info"
   },
+  "contributors": [{
+    "name": "Juan José Ramírez González",
+    "email": "kraker.orion@gmail.com",
+    "url": "https://github.com/jaun-rg"
+  }],
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
