@@ -188,6 +188,7 @@ module.exports = (function () {
           console.log('ERROR', err)
           cb(err)
         })
+      }
     },
     update: function (connection, collection, options, values, cb) {
       debug('UPDATING')
@@ -209,7 +210,7 @@ module.exports = (function () {
 
 var _registerSync = function (remoteCouch, collectionName, localDB){
   var  _remoteCollection = _generateUrl(remoteCouch) + collectionName;
-  
+
   debug("remote url :", _remoteCollection)
   localDB.sync(_remoteCollection, {
     live: true,
@@ -234,7 +235,7 @@ var _generateUrl = function (remoteCouch) {
 var _configPouchDB = function (_path){
   _definePath(_path);
   debug("db location: "+dbPath);
-  
+
   _localPouch = PouchDB.defaults({
     prefix: dbPath
   });
