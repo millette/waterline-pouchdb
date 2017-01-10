@@ -1,6 +1,6 @@
 {
   "name": "waterline-pouchdb",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "pouchdb adapter for Sails / Waterline",
   "main": "index.js",
   "repository": "jaun-rg/waterline-pouchdb.git",
